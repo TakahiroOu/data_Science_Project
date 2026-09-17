@@ -3,9 +3,9 @@ import re
 
 
 
-def extraxt_headlines(corpus):
+def extract_headlines(corpus):
     """
-    Args: Corpus from the vrt-fil with headings, image captions, textbody etc.
+    Args: Corpus from the vrt-file with headings, image captions, textbody etc.
 
     Returns: List, extracted headlines by the tag <sentence>, where type="heading".
 
@@ -23,4 +23,4 @@ def extraxt_headlines(corpus):
 
 if __name__ == "__main__":
     corpus = open("01.vrt", "r", encoding="utf8")   #for testing, can be automated later
-    extraxt_headlines(corpus)
+    extract_headlines(corpus)
