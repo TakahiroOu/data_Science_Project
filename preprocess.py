@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     # TODO: take a whole year at a time
     
-    corpus = open(r"C:\Users\rasmu\Documents\datascience\data\2022\02.vrt", "r", encoding="utf8")   #for testing, can be automated later
+    corpus = open(r"path_to_vrt", "r", encoding="utf8")   #for testing, can be automated later
     headlines = extract_headlines(corpus)
     lemmas = extract_lemmas(headlines)
     frequencies = Counter(lemmas)
