@@ -5,22 +5,56 @@ from itertools import islice
 from nltk.corpus import stopwords
 
 
-def extract_headlines(corpus):
+def extract_leads(corpus):
     """
     Args: Corpus from the vrt-file with headings, image captions, textbody etc.
 
-    Returns: List, extracted headlines by the tag <sentence>, where type="heading".
+    Returns: List, extracted leads by the tag <sentence>, where type="lead".
 
     """
 
-    headlines = []
-    for hdl in re.findall(r"<sentence[^>]*type=\"heading\"[^>]*>(.*?)</sentence>", str(corpus.read()), re.DOTALL):
-        headlines.append(hdl)
+    leads = []
+    department = "Politiikka"
+    paragraph_type = "lead"
+    in_department = False
+    lead = None
+    content_re = re.compile(r'(\w+)="([^"]*)"')
 
-    print(headlines[2]) #for testing
-    print(len(headlines)) #for testing
+    # set the lead to none, until we find according the paragraph type, 
+    # then go line by line until the lead is collected --> tag ending </ reached 
+    
+    for line in corpus: # find metadata from the <text-tag
+        if line.startswith("<text "):
+            metas = dict(content_re.findall(line))
+            in_department = metas.get("main_department") == department
+            lead = None
 
-    return headlines
+        elif line.startswith("</text>"):
+            in_department = False
+            lead = None
+
+        # go line by line until find tag <sentence>, where paragraph_type == lead
+        elif not in_department: 
+            continue
+
+        elif line.startswith("<sentence"):
+            tag_info = dict(content_re.findall(line))
+            if tag_info.get("paragraph_type") == paragraph_type:
+                lead = []
+
+         # if all lines for the lead are processed -> append the whole lead to lead and set lead = None for the next lead
+        elif line.startswith("</sentence>"): 
+            if lead is not None:
+                leads.append(lead)
+            lead = None
+
+        elif lead is not None:
+            lead.append(line)
+
+    print(leads[2]) #for testing
+    print(len(leads)) #for testing
+
+    return leads
 
 def extract_lemmas(headlines):
     lemmas = []
@@ -44,7 +78,7 @@ if __name__ == "__main__":
     # TODO: take a whole year at a time
     
     corpus = open(r"path_to_vrt", "r", encoding="utf8")   #for testing, can be automated later
-    headlines = extract_headlines(corpus)
+    headlines = extract_leads(corpus)
     lemmas = extract_lemmas(headlines)
     frequencies = Counter(lemmas)
     descending = {k: v for k, v in sorted(frequencies.items(), key=lambda item: item[1], reverse=True)}
