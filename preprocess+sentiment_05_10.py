@@ -24,9 +24,14 @@ import json
 import re
 import sys
 from pathlib import Path
+import numpy as np
+import sklearn
+from nltk.corpus import stopwords 
 
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+
 
 
 MODEL = "fergusq/finbert-finnsentiment"
@@ -239,6 +244,65 @@ def classify(texts):
     return labels, scores
 
 
+# in progress
+
+def keyword_analysis(lemma_docs, labels, K=10, stop_words=None):
+    labels = np.array(labels)
+    pos_mask = labels == "positive"
+    neg_mask = labels == "negative"
+    n_pos, n_neg = pos_mask.sum(), neg_mask.sum()
+
+
+    # TF-IDF per label (IDF computed over the whole corpus)
+    tfidf_vec = TfidfVectorizer(max_df=0.5, min_df=2, stop_words=stop_words)
+    X_tfidf = tfidf_vec.fit_transform(lemma_docs)
+    tfidf_vocab = tfidf_vec.get_feature_names_out()
+
+    tfidf_results = {}
+    for name, mask in (("positive", pos_mask), ("negative", neg_mask)):
+        mean_scores = np.asarray(X_tfidf[mask].mean(axis=0)).ravel()
+        top = mean_scores.argsort()[::-1][:K]
+        tfidf_results[name] = [
+            (tfidf_vocab[i], float(mean_scores[i]))
+            for i in top if mean_scores[i] > 0
+        ]
+
+
+    # 2) Most frequent words overall, with positive/negative counts
+    count_vec = CountVectorizer(min_df=2, stop_words=stop_words)
+    X_count = count_vec.fit_transform(lemma_docs)
+    vocab = count_vec.get_feature_names_out()
+
+    total = np.asarray(X_count.sum(axis=0)).ravel()
+    pos = np.asarray(X_count[pos_mask].sum(axis=0)).ravel()
+    neg = np.asarray(X_count[neg_mask].sum(axis=0)).ravel()
+
+    freq_results = [
+        {
+            "word": vocab[i],
+            "total": int(total[i]),
+            "positive": int(pos[i]),
+            "negative": int(neg[i]),
+        }
+        for i in total.argsort()[::-1][:K]
+    ]
+
+    # Print
+    for name, pairs in tfidf_results.items():
+        print(f"\nTF-IDF top {K} ({name}):")
+        for word, score in pairs:
+            print(f"  {word:20s} {score:.4f}")
+
+    print(f"\nLeads: {pos_mask.sum()} positive, {neg_mask.sum()} negative")
+    print(f"\nTop {K} most frequent words:")
+    print(f"  {'word':20s} {'total':>6s} {'pos':>6s} {'neg':>6s}")
+    for r in freq_results:
+        print(f"  {r['word']:20s} {r['total']:6d} "
+              f"{r['positive']:6d} {r['negative']:6d}")
+
+    return {"tfidf": tfidf_results, "frequent": freq_results}
+
+
 def main():
 
     # ---------------------------------------------------------
@@ -364,6 +428,14 @@ def main():
     print(
         f"\nSaved to: {output_path}"
     )
+
+    # ---------------------------------------------------------
+    # TF/IDF analysis for extracting most frequent keywords
+    # ---------------------------------------------------------
+    lemma_docs = [" ".join(item["lemma"]) for item in words]
+    fi_stop = stopwords.words("finnish")
+    keywords = keyword_analysis(lemma_docs, labels, K=10, stop_words=fi_stop)
+
 
 
 if __name__ == "__main__":
