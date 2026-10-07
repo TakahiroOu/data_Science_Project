@@ -3,33 +3,15 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 DATA_DIR = Path("data")
 
 """All of the json-files in the same folder, for example data/ """
 
-def load_json_file(path: Path) -> pd.DataFrame:
-    """Read one JSON file (regular JSON or JSON Lines) into a DataFrame."""
-    with path.open(encoding="utf-8") as f:
-        try:
-            obj = json.load(f)
-        except json.JSONDecodeError:
-            # Fall back to JSON Lines: one JSON object per line
-            f.seek(0)
-            obj = [json.loads(line) for line in f if line.strip()]
-
-    if isinstance(obj, dict):
-        obj = [obj]  # a single record
-    return pd.json_normalize(obj)  # also flattens nested objects
-
 files = sorted(DATA_DIR.glob("*.json"))
-if not files:
-    raise FileNotFoundError(f"No .json files found in {DATA_DIR.resolve()}")
-
-df = pd.concat((load_json_file(p) for p in files), ignore_index=True)
-print(f"Loaded {len(files)} files -> DataFrame with shape {df.shape}")
-
+df = pd.concat((pd.read_json(p) for p in files), ignore_index=True)
+print(f"Loaded {len(files)} files, DataFrame with shape {df.shape}")
 
 first_col = df.iloc[:, 0]
 print(f"First column: '{df.columns[0]}'")
