@@ -13,7 +13,7 @@ For each token:
     columns[2] = lemma
 
 Usage:
-    python ---
+    python preprocess_sentiment_07_10_by_kword.py data/2022/01.vrt [output.json] [neutral_threshold]
 """
 
 import json
