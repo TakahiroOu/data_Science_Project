@@ -50,6 +50,7 @@ def load_data(data_dir=DATA_DIR):
     df = pd.DataFrame({"text": docs, "label": labels})
     print(f"Loaded {len(files)} files, {len(df)} documents")
     print(df["label"].value_counts().to_string())
+    print(df.head())
     return df
 
 
