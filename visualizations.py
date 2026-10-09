@@ -7,6 +7,12 @@ import plotly.express as px
 import plotly.graph_objects as go  # hover over datapoint
 
 
+dark_blue = "#2f3140"
+blue = "#545d71"
+orange = "#d58c66"
+grey = "#bfc0c0"
+
+
 # example
 # Overview heatmap, no time
 avg = wide.groupby(["keyword", "dataset"]).apply(
