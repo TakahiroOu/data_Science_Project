@@ -1,4 +1,4 @@
-## DATASET
+# DATASET
 * The main dataset is Finnish Broadcasting Company's (YLE) corpuses covering the years 2013-2023.
 * The corpus is filtered with existing tags. From the metadata tag in the beginning of each article, starting with 'text\ '... the main department "Politiikka", ie. politics is fetched. From these articles the leads are fetched to extract the topics. The leads are accessed also from sentence-tag, where the paragraph-type is lead. Leads were chosen to create a smaller, but sufficient subset of the whole corpus to allow us to cover such a long timeframe (10years). Leads were chosen over headlines, as headlines were repeated at times in subheadlines, which had the same tags. 
 * Dataset of YLE corpuses are in vrt-files which consists a lot of information about language itself and thus this sort of information is filtered out. On the other hand, the files have lemmas of each words, which shortcuts stemming from preprocess phrase.
@@ -6,81 +6,81 @@
 * Nordic Tweet Stream: Laitinen, Mikko, Jonas Lundberg, Magnus Levin & Rafael Martins. 2018. The Nordic Tweet Stream: A Dynamic Real-Time Monitor Corpus of Big and Rich Language Data, Proc. of Digital Humanities in the Nordic Countries 3rd Conference, Helsinki, Finland, March 7-9, 2018, CEUR-WS.org, online CEUR-WS.org/Vol-2084/short10.pdf
 
 
-## PREPROCESS
+# PREPROCESS
 *
 *
 *
 
 
 
-## ANALYSIS
+# ANALYSIS
 
-# TF/IDF results:
+## TF/IDF results:
 
-Loaded 10 files, 3831 documents
-label
-neutral     3303
-negative     432
-positive      96
+Loaded 10 files, 3831 documents\
+label\
+neutral     3303\
+negative     432\
+positive      96\
 
 
-# TF-IDF top 50 (all documents):
-  kirjoittaa           0.0206
-  toimittaja           0.0203
-  **suomi**            0.0194  *(Finland)* keyword 1
-  yle                  0.0178
-  **hallitus**         0.0178 *(Government)* keyword 2
-  arvioida             0.0117
-  myös                 0.0116
-  sanoa                0.0111
-  vuosi                0.0110
-  voida                0.0105
-  **presidentti**      0.0104 *(President)* keyword 3
-  uusi                 0.0103
-  **venäjä**           0.0101 *(Russia)* keyword 4
-  tutkija              0.0100
-  **puolue**             0.0100 *(Party)* keyword 5
-  **ulkopolitiikka**     0.0099 *(Foreign affairs)* keyword 6
-  **talouspolitiikka**   0.0097 *(Economic policy)* keyword 7
-  tehdä                0.0097
-  pitää                0.0096
-  **turvallisuuspolitiikka**  0.0094 *(security policy)* keyword 8
-  **yhdysvalta**       0.0094 *(United States (of America))* keyword 9
-  saada                0.0092
-  maa                  0.0084
-  pekka                0.0084
-  **perussuomalainen**     0.0082 *(The Finns Party (refers to a politician))*  keyword 10         
-  **pääministeri**         0.0081 *(Prime minister)*           
-  **keskusta**             0.0081 *(Center party)*
-  mieli                0.0081
-  muu                  0.0079
-  haluta               0.0078
-  aika                 0.0074
-  tulla                0.0073
-  puheenjohtaja        0.0072
-  **maahanmuuttopolitiikka** 0.0070 *(Immigration policy)*
-  suuri                0.0067
-  **talous**               0.0066 *(Economics)*
-  kertoa               0.0066
-  erikoinentoimittaja  0.0063
-  suomalainen          0.0063
-  **eurooppa**             0.0062 *(Europe)*
-  professori           0.0059
-  **eduskunta**            0.0059 *(Parliament)*
-  kansainvälinen       0.0057
-  **ilmastopolitiikka**    0.0056 *(Climate policy)*
-  **kansanedustaja**       0.0054 *(Member of parliament)*
-  muutos               0.0054
-  niinistö             0.0053
-  hannu                0.0052
-  **kokoomus**             0.0052 *(National Coalition Party)*
-  asiantuntija         0.0052
+## TF-IDF top 50 (all documents):\
+  kirjoittaa           0.0206\
+  toimittaja           0.0203\
+  **suomi**            0.0194  *(Finland)* keyword 1\
+  yle                  0.0178\
+  **hallitus**         0.0178 *(Government)* keyword 2\
+  arvioida             0.0117\
+  myös                 0.0116\
+  sanoa                0.0111\
+  vuosi                0.0110\
+  voida                0.0105\
+  **presidentti**      0.0104 *(President)* keyword 3\
+  uusi                 0.0103\
+  **venäjä**           0.0101 *(Russia)* keyword 4\
+  tutkija              0.0100\
+  **puolue**             0.0100 *(Party)* keyword 5\
+  **ulkopolitiikka**     0.0099 *(Foreign affairs)* keyword 6\
+  **talouspolitiikka**   0.0097 *(Economic policy)* keyword 7\
+  tehdä                0.0097\
+  pitää                0.0096\
+  **turvallisuuspolitiikka**  0.0094 *(security policy)* keyword 8\
+  **yhdysvalta**       0.0094 *(United States (of America))* keyword 9\
+  saada                0.0092\
+  maa                  0.0084\
+  pekka                0.0084\
+  **perussuomalainen**     0.0082 *(The Finns Party (refers to a politician))*  keyword 10\         
+  **pääministeri**         0.0081 *(Prime minister)*\           
+  **keskusta**             0.0081 *(Center party)*\
+  mieli                0.0081\
+  muu                  0.0079\
+  haluta               0.0078\
+  aika                 0.0074\
+  tulla                0.0073\
+  puheenjohtaja        0.0072\
+  **maahanmuuttopolitiikka** 0.0070 *(Immigration policy)*\
+  suuri                0.0067\
+  **talous**               0.0066 *(Economics)*\
+  kertoa               0.0066\
+  erikoinentoimittaja  0.0063\
+  suomalainen          0.0063\
+  **eurooppa**             0.0062 *(Europe)*\
+  professori           0.0059\
+  **eduskunta**            0.0059 *(Parliament)*\
+  kansainvälinen       0.0057\
+  **ilmastopolitiikka**    0.0056 *(Climate policy)*\
+  **kansanedustaja**       0.0054 *(Member of parliament)*\
+  muutos               0.0054\
+  niinistö             0.0053\
+  hannu                0.0052\
+  **kokoomus**             0.0052 *(National Coalition Party)*\
+  asiantuntija         0.0052\
 
 
 # Additional information from the dataset: 
 
 
-Top 50 most frequent words (all documents):
+Top 50 most frequent words (all documents):\
   politiikka             2025
   kirjoittaa              482
   toimittaja              453
