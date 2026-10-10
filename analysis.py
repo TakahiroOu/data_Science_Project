@@ -24,6 +24,7 @@ except LookupError:
 URL_RE = re.compile(r"https?://\S+|www\.\S+")
 NON_LETTER_RE = re.compile(r"[^a-zäöå\s]")  # keep a-z plus Finnish letters; adjust as needed
 SPACE_RE = re.compile(r"\s+")
+YEAR_RE = re.compile(r"(?<!\d)(\d{4})(?!\d)")
 
 
 def load_data(data_dir=DATA_DIR):
@@ -38,16 +39,26 @@ def load_data(data_dir=DATA_DIR):
     if not files:
         raise FileNotFoundError(f"No .json files found in {Path(data_dir).resolve()}")
 
-    docs, labels = [], []
+    docs, labels, years = [], [], []
     for path in files:
+
+        match = YEAR_RE.search(path.stem)
+        if match:
+            year = int(match.group(1))
+        else:
+            year = None
+            print(f"Warning: no year found in file name '{path.name}'")
+
         with path.open(encoding="utf-8") as f:
             data = json.load(f)
         for label in LABELS:
             for tokens in data.get(label, []):
                 docs.append(" ".join(map(str, tokens)))
                 labels.append(label)
+                years.append(year)
 
-    df = pd.DataFrame({"text": docs, "label": labels})
+    df = pd.DataFrame({"text": docs, "label": labels, "year": years})
+    df["year"] = df["year"].astype("Int64")
     print(f"Loaded {len(files)} files, {len(df)} documents")
     print(df["label"].value_counts().to_string())
     print(df.head())
@@ -153,7 +164,6 @@ def top_words_overall(lemma_docs, K=10, stop_words=None):
 
 
 
-
 def main():
     df = load_data()
 
@@ -161,8 +171,8 @@ def main():
     df["clean"] = df["text"].map(clean_text)
     df = df[df["clean"] != ""].reset_index(drop=True)
 
-    keyword_analysis(df["clean"], df["label"], K=10)
-    top_words_overall(df["clean"], K=10)
+    keyword_analysis(df["clean"], df["label"], K=50)
+    top_words_overall(df["clean"], K=50)
 
 
 if __name__ == "__main__":
