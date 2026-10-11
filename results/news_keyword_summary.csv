@@ -1,0 +1,11 @@
+﻿keyword,n_docs,positive,positive_%,positive_lift,neutral,neutral_%,neutral_lift,negative,negative_%,negative_lift,pos_neg_ratio
+hallitus,413,8,1.9,0.77,339,82.1,0.95,66,16.0,1.42,0.12
+presidentti,198,8,4.0,1.61,175,88.4,1.03,15,7.6,0.67,0.53
+venäjä,160,1,0.6,0.25,147,91.9,1.07,12,7.5,0.67,0.08
+puolue,236,4,1.7,0.68,207,87.7,1.02,25,10.6,0.94,0.16
+ulkopolitiikka,151,9,6.0,2.38,129,85.4,0.99,13,8.6,0.76,0.69
+talouspolitiikka,142,3,2.1,0.84,126,88.7,1.03,13,9.2,0.81,0.23
+turvallisuuspolitiikka,149,1,0.7,0.27,146,98.0,1.14,2,1.3,0.12,0.5
+yhdysvallat,0,0,,,0,,,0,,,
+perussuomalainen,126,2,1.6,0.63,103,81.7,0.95,21,16.7,1.48,0.1
+pääministeri,138,3,2.2,0.87,121,87.7,1.02,14,10.1,0.9,0.21
