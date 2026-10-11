@@ -16,7 +16,7 @@ YEAR_RE = re.compile(r"(?<!\d)(\d{4})(?!\d)")
 KEYWORDS = [
     "hallitus", "presidentti", "venäjä", "puolue",
     "ulkopolitiikka", "talouspolitiikka", "turvallisuuspolitiikka",
-    "yhdysvallat", "perussuomalainen", "pääministeri", 
+    "maahanmuuttopolitiikka", "perussuomalainen", "pääministeri", 
     ]
 
 
