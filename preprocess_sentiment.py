@@ -13,7 +13,7 @@ For each token:
     columns[2] = lemma
 
 Usage:
-    python split_sentiment.py data/2022/01.vrt [output.json] [neutral_threshold]
+    python preprocess_sentiment.py data/2022/01.vrt [output.json] [neutral_threshold]
 """
 
 import json
@@ -21,12 +21,7 @@ import re
 import sys
 from pathlib import Path
 
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-
-MODEL = "fergusq/finbert-finnsentiment"
-BATCH_SIZE = 32
-NEUTRAL_THRESHOLD = 0.98
+from sentiment_model import NEUTRAL_THRESHOLD, classify, load_model
 
 
 def extract_leads(corpus):
@@ -90,59 +85,6 @@ def words_to_text(original_words):
     return text.strip()
 
 
-def classify(texts, neutral_threshold):
-    tokenizer = AutoTokenizer.from_pretrained(MODEL)
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL)
-    model.eval()
-
-    label2id = {
-        label.lower(): i
-        for i, label in model.config.id2label.items()
-    }
-
-    neu = label2id["neutral"]
-    pos = label2id["positive"]
-    neg = label2id["negative"]
-
-    labels = []
-    scores = []
-
-    for start in range(0, len(texts), BATCH_SIZE):
-        batch = texts[start:start + BATCH_SIZE]
-
-        enc = tokenizer(
-            batch,
-            padding=True,
-            truncation=True,
-            max_length=128,
-            return_tensors="pt"
-        )
-
-        with torch.no_grad():
-            probs = model(**enc).logits.softmax(dim=-1)
-
-        for p in probs:
-            if p[neu] >= neutral_threshold:
-                labels.append("neutral")
-                scores.append(p[neu].item())
-            elif p[pos] > p[neg]:
-                labels.append("positive")
-                scores.append(p[pos].item())
-            else:
-                labels.append("negative")
-                scores.append(p[neg].item())
-
-        print(
-            f"\r{min(start + BATCH_SIZE, len(texts))}"
-            f"/{len(texts)}",
-            end="",
-            flush=True
-        )
-
-    print()
-    return labels, scores
-
-
 def main():
     in_path = Path(sys.argv[1])
 
@@ -172,8 +114,11 @@ def main():
     print(f"Neutral threshold: {neutral_threshold}")
     print("Classifying sentiment...")
 
+    tokenizer, model = load_model()
     labels, scores = classify(
         sentiment_texts,
+        tokenizer,
+        model,
         neutral_threshold
     )
 

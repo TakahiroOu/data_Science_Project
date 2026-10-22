@@ -1,68 +1,19 @@
-import json
-import re
 from pathlib import Path
 
 import nltk
 import numpy as np
-import pandas as pd
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
+from common import LABELS, NON_LETTER_RE, SPACE_RE, URL_RE, load_data
+
 DATA_DIR = Path("data")
-
-# The keys used in the json-files. Each key holds a list of documents,
-# and each document is a list of lemmatized tokens.
-LABELS = ("positive", "neutral", "negative")
-
 
 try:
     FINNISH_STOP_WORDS = set(stopwords.words("finnish"))
 except LookupError:
     nltk.download("stopwords")
     FINNISH_STOP_WORDS = set(stopwords.words("finnish"))
-
-URL_RE = re.compile(r"https?://\S+|www\.\S+")
-NON_LETTER_RE = re.compile(r"[^a-zäöå\s]")  # keep a-z plus Finnish letters; adjust as needed
-SPACE_RE = re.compile(r"\s+")
-YEAR_RE = re.compile(r"(?<!\d)(\d{4})(?!\d)")
-
-
-def load_data(data_dir=DATA_DIR):
-    """Read all json-files in the folder (for example data/).
-
-    Each file looks like:
-        {"positive": [["hän", "nauttia", ...], [...]], "neutral": [...], "negative": [...]}
-
-    Returns a DataFrame with one row per document: "text" (tokens joined with spaces) and "label".
-    """
-    files = sorted(Path(data_dir).glob("*.json"))
-    if not files:
-        raise FileNotFoundError(f"No .json files found in {Path(data_dir).resolve()}")
-
-    docs, labels, years = [], [], []
-    for path in files:
-
-        match = YEAR_RE.search(path.stem)
-        if match:
-            year = int(match.group(1))
-        else:
-            year = None
-            print(f"Warning: no year found in file name '{path.name}'")
-
-        with path.open(encoding="utf-8") as f:
-            data = json.load(f)
-        for label in LABELS:
-            for tokens in data.get(label, []):
-                docs.append(" ".join(map(str, tokens)))
-                labels.append(label)
-                years.append(year)
-
-    df = pd.DataFrame({"text": docs, "label": labels, "year": years})
-    df["year"] = df["year"].astype("Int64")
-    print(f"Loaded {len(files)} files, {len(df)} documents")
-    print(df["label"].value_counts().to_string())
-    print(df.head())
-    return df
 
 
 def clean_text(text: str) -> str:
@@ -165,7 +116,7 @@ def top_words_overall(lemma_docs, K=10, stop_words=None):
 
 
 def main():
-    df = load_data()
+    df = load_data(DATA_DIR)
 
     # Clean the texts and drop documents that became empty (labels stay aligned)
     df["clean"] = df["text"].map(clean_text)
