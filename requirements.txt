@@ -1,0 +1,8 @@
+matplotlib
+nltk
+numpy
+pandas
+scikit-learn
+# only for the FinBERT steps (preprocess_sentiment.py, twitter_sentiment.py)
+torch
+transformers
