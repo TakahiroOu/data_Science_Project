@@ -1,45 +1,13 @@
-import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.colors import TwoSlopeNorm
-from pathlib import Path
 
-# Input files
-NEWS_FILE = Path("results/news_keyword_yearly.csv")
-TWITTER_FILE = Path("results/twitter_keyword_yearly.csv")
-PARTY_FILE = Path("results/twitter_party_yearly.csv")
+from common import GRAPH_DIR, load_results
 
-# Output folder
-OUTPUT_DIR = Path("results/graphs")
+OUTPUT_DIR = GRAPH_DIR
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Keep only the columns needed for plotting
-columns = [
-    "keyword", "year", "n_docs",
-    "positive", "neutral", "negative"
-]
-
-
-def read_results(path, source):
-    df = pd.read_csv(path, encoding="utf-8-sig")[columns].copy()
-    df["source"] = source
-    df["year"] = df["year"].astype(int)
-    return df
-
-
-# Read the files
-news = read_results(NEWS_FILE, "News")
-twitter = read_results(TWITTER_FILE, "Twitter")
-parties = read_results(PARTY_FILE, "Twitter")
-
-# The news file also has an "ALL DOCUMENTS" baseline row per year,
-# which has no Twitter counterpart
-news = news[news["keyword"] != "ALL DOCUMENTS"]
-
-# Combine the datasets
-df = pd.concat([news, twitter], ignore_index=True)
-
-df["keyword"] = df["keyword"].str.lower().str.strip()
+# News and Twitter per keyword, and Twitter per party
+df, parties = load_results()
 
 years = list(range(2013, 2023))
 sentiments = ["positive", "neutral", "negative"]
@@ -186,52 +154,6 @@ for party in parties["keyword"].unique():
         OUTPUT_DIR / f"party_{party}.png",
     )
 
-# Overview heatmap, no time aspect:
-# net sentiment = (positive - negative) / all documents, over all years
-totals = df.groupby(["keyword", "source"])[["positive", "negative", "n_docs"]].sum()
-net = (
-    (totals["positive"] - totals["negative"]) / totals["n_docs"]
-).unstack("source")
-net["Difference (Twitter - News)"] = net["Twitter"] - net["News"]
-
-# Red = negative, blue = positive, white = 0
-limit = np.nanmax(np.abs(net.to_numpy()))
-norm = TwoSlopeNorm(vmin=-limit, vcenter=0, vmax=limit)
-
-fig, ax = plt.subplots(figsize=(9, 7))
-image = ax.imshow(net.to_numpy(), cmap="RdBu", norm=norm, aspect="auto")
-
-ax.set_xticks(np.arange(len(net.columns)))
-ax.set_xticklabels(net.columns)
-ax.set_yticks(np.arange(len(net.index)))
-ax.set_yticklabels(net.index)
-
-for row in range(len(net.index)):
-    for col in range(len(net.columns)):
-        value = net.iat[row, col]
-        # White text on the darkest cells so it stays readable
-        ax.text(col, row, f"{value:.2f}",
-                ha="center", va="center", fontsize=10,
-                color="white" if abs(value) > 0.6 * limit else "black")
-
-ax.set_title(
-    "Net sentiment 2013-2022: (positive - negative) / all",
-    fontsize=14,
-    fontweight="bold",
-    pad=15,
-)
-fig.colorbar(image, ax=ax, label="Net sentiment")
-fig.tight_layout()
-
-fig.savefig(
-    OUTPUT_DIR / "heatmap_news_vs_twitter.png",
-    dpi=300,
-    bbox_inches="tight",
-)
-
-plt.show()
-plt.close(fig)
-
-print(f"Created {df['keyword'].nunique()} keyword graphs, "
-      f"{parties['keyword'].nunique()} party graphs and 1 heatmap.")
+print(f"Created {df['keyword'].nunique()} keyword graphs "
+      f"and {parties['keyword'].nunique()} party graphs.")
 print(f"Saved to: {OUTPUT_DIR}")

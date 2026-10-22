@@ -21,6 +21,12 @@ NON_LETTER_RE = re.compile(r"[^a-zäöå\s]")  # keep a-z plus Finnish letters; 
 SPACE_RE = re.compile(r"\s+")
 YEAR_RE = re.compile(r"(?<!\d)(\d{4})(?!\d)")
 
+# Yearly result tables and where the graphs are saved
+NEWS_RESULTS = Path("results/news_keyword_yearly.csv")
+TWITTER_RESULTS = Path("results/twitter_keyword_yearly.csv")
+PARTY_RESULTS = Path("results/twitter_party_yearly.csv")
+GRAPH_DIR = Path("results/graphs")
+
 
 def load_data(data_dir="data", source=None):
     """Read all json-files in the folder (for example data/).
@@ -58,3 +64,27 @@ def load_data(data_dir="data", source=None):
     print(f"[{df['source'].iloc[0]}] Loaded {len(files)} files, {len(df)} documents")
     print(df["label"].value_counts().to_string())
     return df
+
+
+def read_results(path, source):
+    """One yearly results table with only the columns needed for plotting."""
+    columns = ["keyword", "year", "n_docs", "positive", "neutral", "negative"]
+    df = pd.read_csv(path, encoding="utf-8-sig")[columns].copy()
+    df["source"] = source
+    df["year"] = df["year"].astype(int)
+    return df
+
+
+def load_results():
+    """Return (news + Twitter per keyword, Twitter per party)."""
+    news = read_results(NEWS_RESULTS, "News")
+    twitter = read_results(TWITTER_RESULTS, "Twitter")
+    parties = read_results(PARTY_RESULTS, "Twitter")
+
+    # The news file also has an "ALL DOCUMENTS" baseline row per year,
+    # which has no Twitter counterpart
+    news = news[news["keyword"] != "ALL DOCUMENTS"]
+
+    df = pd.concat([news, twitter], ignore_index=True)
+    df["keyword"] = df["keyword"].str.lower().str.strip()
+    return df, parties

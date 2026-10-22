@@ -15,9 +15,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 
 STEPS = [
-    "analysis.py",      # results/news_keyword_*.csv
-    "tfidf.py",         # TF-IDF and word frequencies (printed)
-    "making_graph.py",  # results/graphs/
+    "analysis.py",               # results/news_keyword_*.csv
+    "tfidf.py",                  # TF-IDF and word frequencies (printed)
+    "visualization_yearly.py",   # results/graphs/ bar charts
+    "visualization_heatmap.py",  # results/graphs/ heatmap
 ]
 
 
