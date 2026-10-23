@@ -69,10 +69,10 @@ positive      96
   asiantuntija         0.0052
 
   
-## Proportions
+# Proportions
 Finally the proportions of neutral, positive and negative content for each keyword are calculated with analysis.py from both the news and twitter dataset. The text is first cleaned just to make sure everything is in the same format, then keywords are searched from the dataframe content with regex so that the search would take different forms, prefixes and suffixes into account and not exclude them from the count. There are analysing methods for overall shares and yearly comparisons.\
 
-## Chanllenges and limitations
+# Challenges and limitations
 On language: the language choice of Finnish was the most difficult part of the project. It did limit a lot of models and challenged us to find different solutions. For example, there are topics about extracting BERT-models which we first tried to use, but the implementation with Finnish would have required even more adjusting and adapting. That turned out not to be feasible on the scope of this project. \
 
 
