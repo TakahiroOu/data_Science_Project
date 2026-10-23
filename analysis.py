@@ -9,18 +9,15 @@ from common import KEYWORDS, LABELS, NON_LETTER_RE, SPACE_RE, URL_RE, load_data
 
 def clean_text(text):
     """Lowercase, remove URLs and non-letters, normalise whitespace."""
+    
     text = URL_RE.sub(" ", str(text).lower())
     text = NON_LETTER_RE.sub(" ", text)
     return SPACE_RE.sub(" ", text).strip()
 
 
 def build_pattern(keyword, match="prefix"):
-    """Regex for one keyword, for text that is space-separated lemmas.
-
-    exact    - whole word only            ("vaali" does not match "vaalitulos")
-    prefix   - word starts with keyword   ("vaali" matches "vaalitulos")
-    contains - keyword anywhere in a word ("puolue" matches "oppositiopuolue" too; widest net)
-    """
+    """Regex for one keyword, for text that is space-separated lemmas."""
+    
     kw = re.escape(keyword.lower().strip())
     if match == "exact":
         return rf"(?<!\S){kw}(?!\S)"
@@ -120,9 +117,6 @@ def analyse(df, name, keywords, match, out_dir):
 
 def main():
     df_news = load_data("data", source="news")
-
-    # match: "exact" | "prefix" (default, catches compounds like hallitusohjelma)
-    #        | "contains" (widest, also catches oppositiopuolue)
     match = "prefix"
     out_dir = Path("results")
 
