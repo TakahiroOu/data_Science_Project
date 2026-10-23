@@ -1,22 +1,13 @@
 # DATASET
-* The main dataset is Finnish Broadcasting Company's (YLE) corpora covering the years 2013-2023.
-* The corpus is filtered with existing tags. From the metadata tag in the beginning of each article, starting with 'text\ '... the main department "Politiikka", ie. politics is fetched. From these articles the leads are fetched to extract the topics. The leads are accessed also from sentence-tag, where the paragraph-type is lead. Leads were chosen to create a smaller, but sufficient subset of the whole corpus to allow us to cover such a long timeframe (10years). Leads were chosen over headlines, as headlines were repeated at times in subheadlines, which had the same tags. 
-* Dataset of YLE corpuses are in vrt-files which consists a lot of information about language itself and thus this sort of information is filtered out. On the other hand, the files have lemmas of each words, which shortcuts stemming from preprocess phrase.
 
-* Nordic Tweet Stream: Laitinen, Mikko, Jonas Lundberg, Magnus Levin & Rafael Martins. 2018. The Nordic Tweet Stream: A Dynamic Real-Time Monitor Corpus of Big and Rich Language Data, Proc. of Digital Humanities in the Nordic Countries 3rd Conference, Helsinki, Finland, March 7-9, 2018, CEUR-WS.org, online CEUR-WS.org/Vol-2084/short10.pdf
+The news dataset is constructed from YLE (Finnish Broadcast Corporation) corpora containing yearly news articles with lingustic information and metadata. The vrt-files cover years 2013-2022 matching the twitter dataset. The news corpora is filtered into a subset including only politics-related leads without metadata or any other information. The body of text as a whole would increase an already large amount of data. On the other hand, headlines would have been shorter, less informative. From the metadata tag in the beginning of each article, starting with 'text\ '... the main department "Politiikka", ie. politics is fetched. From these articles the leads are fetched to extract the topics. The leads are accessed also from sentence-tag, where the paragraph-type is lead. Leads were chosen to create a smaller, but sufficient subset of the whole corpus to allow us to cover such a long timeframe (10 years). Leads were chosen as a representative subset, as it contains necessary information in a concise form for each news article. Leads were chosen over headlines, as headlines were repeated at times in subheadlines, which had the same tags. Thus, the duplicates would have potentially skewed the dataset or require further preprocessing.\
 
+The corpora from year 2022 onwards included a department tag (Politiikka, politics) in the metadata, which allows it to filter the data with that. However, the department tag is empty for earlier years. This problem is mitigated with filtering the vrt-files with politics-related lemmas including political parties. The method is not ideal, but successfully extracts sufficient leads needed with the correct topic.\
 
-# PREPROCESS
-*
-*
-*
-
-
-
-# ANALYSIS
+The preprocessed and classified datasets are analysed with term frequency–inverse document frequency algorithm (tf-idf) to extract 50 most meaningful words. The tf-idf indicates frequencies of a word in one document (in this case one lead) and then compares how meaningful it is across all documents). Therefore, better results for potential keywords are obtained compared to just most frequent words in the datasets. Out of these words some are not relevant for politics topic sentiment analysis and are discarded (such as fore names). TF-IDF uses the sklearn library. The stopwords are removed, the text cleaned and the analysis conducted with sklearn feature extraction TdidfVectorizer and CountVectorizer.\
 
 ## TF/IDF results:
-
+-to_be_updated_
 Loaded 10 files, 3831 documents\
 label\
 neutral     3303\
@@ -75,6 +66,22 @@ positive      96
   hannu                0.0052\
   **kokoomus**             0.0052 *(National Coalition Party)*\
   asiantuntija         0.0052
+
+  
+
+Finally the proportions of neutral, positive and negative content for each keyword are calculated with analysis.py from both the news and twitter dataset. The text is first cleaned just to make sure everything is in the same format, then keywords are searched from the dataframe content with regex so that the search would take different forms, prefixes and suffixes into account and not exclude them from the count. There are analysing methods for overall shares and yearly comparisons.\
+
+On language: the language choice of Finnish was the most difficult part of the project. It did limit a lot of models and challenged us to find different solutions. For example, there are topics about extracting BERT-models which we first tried to use, but the implementation with Finnish would have required even more adjusting and adapting. That turned out not to be feasible on the scope of this project. \
+
+
+
+* Nordic Tweet Stream: Laitinen, Mikko, Jonas Lundberg, Magnus Levin & Rafael Martins. 2018. The Nordic Tweet Stream: A Dynamic Real-Time Monitor Corpus of Big and Rich Language Data, Proc. of Digital Humanities in the Nordic Countries 3rd Conference, Helsinki, Finland, March 7-9, 2018, CEUR-WS.org, online CEUR-WS.org/Vol-2084/short10.pdf
+
+
+
+
+
+
 
 
 # Additional information from the dataset: 
