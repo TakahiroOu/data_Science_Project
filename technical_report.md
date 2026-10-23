@@ -4,6 +4,7 @@ The news dataset is constructed from YLE (Finnish Broadcast Corporation) corpora
 
 The corpora from year 2022 onwards included a department tag (Politiikka, politics) in the metadata, which allows it to filter the data with that. However, the department tag is empty for earlier years. This problem is mitigated with filtering the vrt-files with politics-related lemmas including political parties. The method is not ideal, but successfully extracts sufficient leads needed with the correct topic.\
 
+# TF-IDF
 The preprocessed and classified datasets are analysed with term frequency–inverse document frequency algorithm (tf-idf) to extract 50 most meaningful words. The tf-idf indicates frequencies of a word in one document (in this case one lead) and then compares how meaningful it is across all documents). Therefore, better results for potential keywords are obtained compared to just most frequent words in the datasets. Out of these words some are not relevant for politics topic sentiment analysis and are discarded (such as fore names). TF-IDF uses the sklearn library. The stopwords are removed, the text cleaned and the analysis conducted with sklearn feature extraction TdidfVectorizer and CountVectorizer.\
 
 ## TF/IDF results:
@@ -68,9 +69,10 @@ positive      96
   asiantuntija         0.0052
 
   
-
+## Proportions
 Finally the proportions of neutral, positive and negative content for each keyword are calculated with analysis.py from both the news and twitter dataset. The text is first cleaned just to make sure everything is in the same format, then keywords are searched from the dataframe content with regex so that the search would take different forms, prefixes and suffixes into account and not exclude them from the count. There are analysing methods for overall shares and yearly comparisons.\
 
+## Chanllenges and limitations
 On language: the language choice of Finnish was the most difficult part of the project. It did limit a lot of models and challenged us to find different solutions. For example, there are topics about extracting BERT-models which we first tried to use, but the implementation with Finnish would have required even more adjusting and adapting. That turned out not to be feasible on the scope of this project. \
 
 
