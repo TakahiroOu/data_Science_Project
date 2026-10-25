@@ -19,13 +19,9 @@ def build_pattern(keyword, match="prefix"):
     """Regex for one keyword, for text that is space-separated lemmas."""
     
     kw = re.escape(keyword.lower().strip())
-    if match == "exact":
-        return rf"(?<!\S){kw}(?!\S)"
-    if match == "prefix":
-        return rf"(?<!\S){kw}"
     if match == "contains":
         return kw
-    raise ValueError("match must be 'exact', 'prefix' or 'contains'")
+    raise ValueError("match must be 'contains'")
 
 
 def filter_by_keyword(df, keyword, text_col="clean", match="prefix"):
@@ -117,7 +113,7 @@ def analyse(df, name, keywords, match, out_dir):
 
 def main():
     df_news = load_data("data", source="news")
-    match = "prefix"
+    match = "contains"
     out_dir = Path("results")
 
     analyse(df_news, "news", KEYWORDS, match, out_dir)
