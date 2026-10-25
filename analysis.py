@@ -15,7 +15,7 @@ def clean_text(text):
     return SPACE_RE.sub(" ", text).strip()
 
 
-def build_pattern(keyword, match="prefix"):
+def build_pattern(keyword, match="contains"):
     """Regex for one keyword, for text that is space-separated lemmas."""
     
     kw = re.escape(keyword.lower().strip())
