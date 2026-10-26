@@ -1,5 +1,7 @@
-Look the pdf-version, 
-here are some TF-IDF results from the first run as a demonstration:
+Look the pdf-version:
+
+
+Here are some TF-IDF results from the first run as a demonstration:
 
 ## TF/IDF results:
 -to_be_updated_
