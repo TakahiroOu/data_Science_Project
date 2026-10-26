@@ -7,6 +7,8 @@ year by year.
 
 The full description of the data, method and results is in [technical_report.md](technical_report.md).
 
+Read about the project in https://medium.com/@anniinataiv/what-can-we-learn-from-finnish-politics-analysing-10-years-of-news-and-social-media-2aacd96b46c5
+ 
 ## Data
 
 | Source | What is used | In this repo |
