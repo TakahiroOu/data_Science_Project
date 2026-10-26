@@ -1,4 +1,4 @@
-The pdf-version submitted separatedly.
+The pdf-version submitted separatedly: technical_report_data_science.pdf
 
 
 Here are some TF-IDF results from the first run as a demonstration:
