@@ -58,8 +58,8 @@ def keyword_label_by_year(df, keywords, text_col="clean", label_col="label",
                           year_col="year", match="prefix"):
     """Proportions of positive / neutral / negative labels per keyword per year.
 
-    Returns a long table: keyword, year, n_docs, count and share (%) of each label.
-    Also includes an 'ALL DOCUMENTS' row per year as a baseline for comparison.
+    Returns: keyword, year, n_docs, count and share (%) of each label.
+    Also includes an ALL DOCUMENTS row per year as a baseline for comparison.
     """
     kw_list = ["ALL DOCUMENTS"] + [kw.lower().strip() for kw in keywords]
 
