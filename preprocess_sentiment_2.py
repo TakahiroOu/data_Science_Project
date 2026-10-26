@@ -181,8 +181,8 @@ def main(keywords):
 
 
 if __name__ == "__main__":
-    keywords = ["venäjä", "politii", "poliitti", "sdp", "sosiaalidemokraat", "perussuomalai", "kokoomu",
-                "keskusta", "rkp", "liike nyt", "vasemmistoliit", "vihre", "hallitus", "presidentti", "puolue",
+    keywords = ["politii", "poliitti", "sdp", "sosiaalidemokraat", "perussuomalai", "kokoomu",
+                "keskusta", "rkp", "liike nyt", "vasemmistoliit", "hallitus", "presidentti", "puolue",
                 "ulkopolitiikka", "talouspolitiikka", "maahanmuutto", "pääministeri", "kdp", "kristillisdemokraat"]
     main(keywords)
 
