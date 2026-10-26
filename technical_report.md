@@ -1,4 +1,4 @@
-Look the pdf-version:
+The pdf-version submitted separatedly.
 
 
 Here are some TF-IDF results from the first run as a demonstration:
