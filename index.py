@@ -16,9 +16,11 @@ ROOT = Path(__file__).resolve().parent
 
 STEPS = [
     "analysis.py",               # results/news_keyword_*.csv
+    "analysis_parties.py",       # results/news_party_yearly.csv
     "tfidf.py",                  # TF-IDF and word frequencies (printed)
     "visualization_yearly.py",   # results/graphs/ bar charts
     "visualization_heatmap.py",  # results/graphs/ heatmap
+    "visualization_blog.py",     # results/graphs/blog/
 ]
 
 
