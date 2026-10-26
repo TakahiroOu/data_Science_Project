@@ -4,12 +4,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from common import KEYWORDS, LABELS, NON_LETTER_RE, SPACE_RE, URL_RE, load_data
+from common import KEYWORDS, LABELS, NEWS_SEARCH_TERMS, NON_LETTER_RE, SPACE_RE, URL_RE, YEARS, load_data
 
 
 def clean_text(text):
     """Lowercase, remove URLs and non-letters, normalise whitespace."""
-    
+
     text = URL_RE.sub(" ", str(text).lower())
     text = NON_LETTER_RE.sub(" ", text)
     return SPACE_RE.sub(" ", text).strip()
@@ -17,18 +17,18 @@ def clean_text(text):
 
 def build_pattern(keyword, match="contains"):
     """Regex for one keyword, for text that is space-separated lemmas."""
-    
+
     kw = re.escape(keyword.lower().strip())
     if match == "contains":
         return kw
     raise ValueError("match must be 'contains'")
 
 
-def filter_by_keyword(df, keyword, text_col="clean", match="prefix"):
+def filter_by_keyword(df, keyword, text_col="clean", match="contains"):
     return df[df[text_col].str.contains(build_pattern(keyword, match), regex=True)]
 
 
-def keyword_label_relation(df, keywords, text_col="clean", label_col="label", match="prefix"):
+def keyword_label_relation(df, keywords, text_col="clean", label_col="label", match="contains"):
     """Overall label distribution per keyword (all years together), with lift.
 
     lift = share of label among documents with the keyword / share of label in all documents.
@@ -55,7 +55,7 @@ def keyword_label_relation(df, keywords, text_col="clean", label_col="label", ma
 
 
 def keyword_label_by_year(df, keywords, text_col="clean", label_col="label",
-                          year_col="year", match="prefix"):
+                          year_col="year", match="contains"):
     """Proportions of positive / neutral / negative labels per keyword per year.
 
     Returns: keyword, year, n_docs, count and share (%) of each label.
@@ -113,10 +113,13 @@ def analyse(df, name, keywords, match, out_dir):
 
 def main():
     df_news = load_data("data", source="news")
+    df_news = df_news[df_news["year"].isin(YEARS)]
+    # Immigration is searched as "maahanmuutto" in both the news and the tweets
+    keywords = [NEWS_SEARCH_TERMS.get(kw, kw) for kw in KEYWORDS]
     match = "contains"
     out_dir = Path("results")
 
-    analyse(df_news, "news", KEYWORDS, match, out_dir)
+    analyse(df_news, "news", keywords, match, out_dir)
     print(f"\nCSV files saved in {out_dir.resolve()}")
 
 

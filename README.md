@@ -13,11 +13,12 @@ Read about the project in https://medium.com/@anniinataiv/what-can-we-learn-from
 
 | Source | What is used | In this repo |
 |---|---|---|
-| YLE news corpus (Finnish Broadcasting Company), VRT files | Leads (opening paragraphs) of articles that mention political keywords or parties, lemmatized | Yes: `data/<year>_2.json` for 2011–2023, already labelled. The analysis uses 2013–2022 (68,814 leads) |
+| YLE news corpus (Finnish Broadcasting Company), VRT files | Leads (opening paragraphs) of articles that mention political keywords or parties, lemmatized | Yes: `data/<year>_2.json` for 2012–2022, already labelled. The analysis uses 2013–2022 (68,820 leads) |
 | Tweets ([Nordic Tweet Stream](https://ceur-ws.org/Vol-2084/short10.pdf), Laitinen et al. 2018) | Tweets found with each topic or party name as the search term: 61,750 topic tweets and 45,309 party tweets | No: the raw tweets are not published. Only the yearly counts are in `results/` |
 
-`data/2013.json` … `data/2022.json` are an earlier version of the news data (only articles in the
-*Politiikka* department, 3,831 leads), made with `preprocess_sentiment.py`.
+Our first version of the news data selected only articles in the *Politiikka* department (3,831 leads),
+made with `preprocess_sentiment.py`. It was used to choose the keywords with TF-IDF and is no longer in
+the repo.
 
 **Topics**: hallitus (government), presidentti (president), venäjä (Russia), puolue (party),
 ulkopolitiikka (foreign policy), talouspolitiikka (economic policy), turvallisuuspolitiikka (security
@@ -60,7 +61,7 @@ results/graphs/parties/        news vs Twitter per party + heatmap
 results/graphs/blog/           graphs used in the blog
 
 preprocess_sentiment_2.py      YLE VRT file -> keyword-filtered leads -> sentiment -> data/<year>_2.json
-preprocess_sentiment.py        earlier version: Politiikka department only -> data/<year>.json
+preprocess_sentiment.py        first version: Politiikka department only (data no longer in the repo)
 twitter_sentiment.py           tweets -> sentiment -> results/twitter_*_yearly.csv
 analysis.py                    news sentiment per topic and year -> results/news_keyword_*.csv
 analysis_parties.py            news sentiment per party and year -> results/news_party_yearly.csv
@@ -87,10 +88,6 @@ python index.py
 using the data already in `data/` and `results/`. The graphs are saved in `results/graphs/`.
 Each script can also be run on its own, e.g. `python visualization_blog.py`. The visualization
 scripts only read the tables in `results/`.
-
-> **Note:** `analysis.py` and `tfidf.py` read every `.json` file in `data/`. While the earlier
-> version (`data/<year>.json`) is still in the folder, move it out before running them, or the
-> two versions of the news data are counted together.
 
 **Re-running the sentiment classification** (needs `torch` and `transformers`, and is slow without a GPU):
 

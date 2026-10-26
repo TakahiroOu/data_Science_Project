@@ -33,6 +33,11 @@ NEWS_KEYWORD_NAMES = {
     "maahanmuutto": "maahanmuuttopolitiikka",
     "perussuomalai": "perussuomalainen",
 }
+# The same mapping the other way: keyword -> search term used for the news
+NEWS_SEARCH_TERMS = {name: term for term, name in NEWS_KEYWORD_NAMES.items()}
+
+# Years covered by both the news and the tweets
+YEARS = range(2013, 2023)
 
 
 def load_data(data_dir="data", source=None, pattern="*.json"):

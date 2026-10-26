@@ -1,19 +1,18 @@
 """
-Extract Politiikka leads from a VRT file, classify them as
+Extract politics-related leads from a VRT file, classify them as
 positive, negative, or neutral using FinBERT, and save the
 results as JSON.
 
-Only:
-    main_department="Politiikka"
-
-is included.
+The department tag is missing for most articles before 2022, so leads
+are selected by keyword instead: a lead is kept if one of its lemmas
+starts with one of the keywords at the bottom of this file.
 
 For each token:
     columns[0] = original word
     columns[2] = lemma
 
 Usage:
-    python preprocess_sentiment.py data/2022/01.vrt [output.json] [neutral_threshold]
+    python preprocess_sentiment_2.py data/2022/01.vrt [output.json] [neutral_threshold]
 """
 
 import json
@@ -181,8 +180,9 @@ def main(keywords):
 
 
 if __name__ == "__main__":
-    keywords = ["politii", "poliitti", "sdp", "sosiaalidemokraat", "perussuomalai", "kokoomu",
-                "keskusta", "rkp", "liike nyt", "vasemmistoliit", "hallitus", "presidentti", "puolue",
+    # The data in data/*_2.json was made with this list, including "venäjä" and "vihre"
+    keywords = ["venäjä", "politii", "poliitti", "sdp", "sosiaalidemokraat", "perussuomalai", "kokoomu",
+                "keskusta", "rkp", "liike nyt", "vasemmistoliit", "vihre", "hallitus", "presidentti", "puolue",
                 "ulkopolitiikka", "talouspolitiikka", "maahanmuutto", "pääministeri", "kdp", "kristillisdemokraat"]
     main(keywords)
 

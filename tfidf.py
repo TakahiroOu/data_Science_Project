@@ -5,7 +5,7 @@ import numpy as np
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
-from common import LABELS, NON_LETTER_RE, SPACE_RE, URL_RE, load_data
+from common import LABELS, NON_LETTER_RE, SPACE_RE, URL_RE, YEARS, load_data
 
 DATA_DIR = Path("data")
 
@@ -117,6 +117,7 @@ def top_words_overall(lemma_docs, K=10, stop_words=None):
 
 def main():
     df = load_data(DATA_DIR)
+    df = df[df["year"].isin(YEARS)].reset_index(drop=True)
 
     # Clean the texts and drop documents that became empty (labels stay aligned)
     df["clean"] = df["text"].map(clean_text)

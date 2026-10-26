@@ -28,6 +28,7 @@ YEARS = range(2013, 2023)
 # Name -> the single-word search terms you used. The name is used in the
 # output files and tables. Missing input files are simply skipped.
 KEYWORD_TERMS = {kw: [kw] for kw in KEYWORDS}
+KEYWORD_TERMS["maahanmuuttopolitiikka"] = ["maahanmuutto"]  # broader search term
 
 PARTIES = {
     "SDP": ["SDP"],
